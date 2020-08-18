@@ -1,0 +1,128 @@
+<?php
+session_start();
+
+?>
+<html>
+<head>
+<title>signup</title>
+<script type="text/javascript">
+function select()
+{
+if(document.getElementById('typo').value=='investor')
+	{
+	window.location="investor_signup.php";
+	}
+}
+
+</script>
+<style type="text/css">
+input[type=text],input[type=email], input[type=password] {
+font-size:22px;
+ border: none;
+  border-bottom: 2px solid blue;
+}
+input[type=text]:hover ,input[type=email]:hover , input[type=password]:hover {
+font-size:22px;
+ border: none;
+  border-bottom: 2px solid black;
+}
+
+input[type=submit],input[type=reset]{
+background-color:33BDFF;
+border: none;
+color: white;
+padding: 16px 32px;
+text-decoration: none;
+margin: 4px 2px;
+cursor:pointer;
+}
+input[type=submit]:hover , input[type=reset]:hover{
+background-color:FF3342;
+}
+select{
+font-size:16px;
+color:blue;
+border:0px;
+border-bottom:2px solid red;
+}
+select:hover{
+border-bottom:2px solid black;
+}
+div.signup{
+position:absolute;
+left:600px;
+top:30px;
+width:20%;
+border:4px solid gray;
+border-radius:9px;
+}
+</style>
+</head>
+<body>
+<div class="signup">
+<form method="post" action="">
+<table width="200" cellpadding="12" align="center">
+
+<tr>
+<td><span><h3>Email</h3></span></td>
+</tr>
+
+<tr>
+<td><input type="email" placeholder="enter email" required name="email" autocomplete="off"></td>
+</tr>
+
+<tr>
+<td><span><h3>Password</h3></span></td>
+</tr>
+
+<tr>
+<td><input type="password" placeholder="enter password" required name="upass"></td>
+</tr>
+
+<tr>
+<tr>
+<td><input type="submit" value="login" name="submit">&nbsp&nbsp<input type="reset" value="Reset"></td>
+</tr>
+<tr>
+<td>
+<span>Create account as </span>
+<select id="typo" name="type" onchange="select()">
+<option value="" disabled selected hidden>Select</option>
+<option value="investor">Investor</option>
+<option value="startup">start-ups</option>
+<option value="company">Company</option>
+</select>
+</td>
+</tr>
+</table>
+</form>
+</div>
+</body>
+<?php
+$con=mysqli_connect("localhost","root","","excite");
+if(isset($_POST['submit']))
+{
+$res=mysqli_query($con,"SELECT * FROM details WHERE email='$_POST[email]'");
+
+if(mysqli_num_rows($res)>0)
+	{
+	while($data=mysqli_fetch_assoc($res))
+		{	$_SESSION["username"]=$data["username"];
+		if($_POST['email']==$data['email'] && sha1($_POST['upass'])==$data['password'])
+			{
+				echo $_SESSION['username'];
+				header("Location:profile.php");
+			}
+		else
+			{
+				echo "<script>alert('incorrect password');</script>";
+			}
+		}
+	}
+else{
+	echo "<script>alert('no such email registered');</script>";
+   }
+
+}
+?>
+</html>
